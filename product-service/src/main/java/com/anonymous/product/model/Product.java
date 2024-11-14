@@ -1,9 +1,6 @@
 package com.anonymous.product.model;
 
 import java.time.LocalDateTime;
-
-import org.antlr.v4.runtime.misc.NotNull;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +26,7 @@ public class Product {
 	
 	@ManyToOne
 	@JoinColumn(name = "categoryId", referencedColumnName = "id")
-	private Category productCategory;
+	private Category category;
 
 	private double productPrice;
 	private String productBrand;

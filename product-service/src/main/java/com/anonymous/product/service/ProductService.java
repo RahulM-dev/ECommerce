@@ -12,8 +12,8 @@ public interface ProductService {
 	boolean createProduct(ProductRequestDto productDto, MultipartFile imageFile);
 	ProductResponseDto getProductById(String productId);
 	List<ProductResponseDto> getAllProducts();
-	List<ProductRequestDto> getProductsByCategory();
+	List<ProductResponseDto> getProductsByCategory(String categoryId);
 	boolean deleteProductById(String productId);
-	ProductRequestDto updateProduct(String productId, ProductRequestDto productDto);
+	boolean updateProduct(String productId, ProductRequestDto productDto);
 
 }

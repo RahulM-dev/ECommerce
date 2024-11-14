@@ -2,6 +2,7 @@ package com.anonymous.product.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -10,7 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.anonymous.product.dto.ProductRequestDto;
 import com.anonymous.product.dto.ProductResponseDto;
+import com.anonymous.product.model.Category;
 import com.anonymous.product.model.Product;
+import com.anonymous.product.repository.CategoryRepository;
 import com.anonymous.product.repository.ProductRepository;
 
 public class ProductServiceImpl implements ProductService{
@@ -20,12 +23,17 @@ public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	@Override
 	public boolean createProduct(ProductRequestDto productDto, MultipartFile imageFile) {
 		try {
 			Product product = convertRequestDtoToProduct(productDto);
-			String productImageURL = imageUploadToGumlet(imageFile);
+			String productId = UUID.randomUUID().toString();
+			product.setProductId(productId);
+			String productImageURL = imageUploadToGumlet(imageFile, productId);
 			product.setProductImageURL(productImageURL);
 			productRepository.save(product);
 			return true;
@@ -54,21 +62,29 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public List<ProductRequestDto> getProductsByCategory() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProductResponseDto> getProductsByCategory(String categoryId) {
+		List<Product> products = productRepository.findByCategoryId(categoryId);
+		return products.parallelStream()
+				.map(this::convertToResponseDto)
+				.collect(Collectors.toList());
 	}
 
 	@Override
 	public boolean deleteProductById(String productId) {
-		// TODO Auto-generated method stub
-		return false;
+		productRepository.deleteById(productId);
+		return true;
 	}
 
 	@Override
-	public ProductRequestDto updateProduct(String productId, ProductRequestDto productDto) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean updateProduct(String productId, ProductRequestDto productDto) {
+		Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+		product.setProductName(productDto.getProductName());
+		product.setProductPrice(productDto.getProductPrice());
+		Category category = categoryRepository.findById(productDto.getProductCategoryId())
+									.orElseThrow(() -> new RuntimeException("Category Not found"));
+		product.setCategory(category);
+		return true;
 	}
 	
 	public Product convertRequestDtoToProduct(ProductRequestDto productRequestDto) {
@@ -87,7 +103,7 @@ public class ProductServiceImpl implements ProductService{
 		return this.modelMapper.map(product, ProductResponseDto.class);
 	}
 	
-	public String imageUploadToGumlet(MultipartFile file) {
+	public String imageUploadToGumlet(MultipartFile file, String productId) {
 		//Write the logic to upload the files to Gumlet Service
 		
 		return "Return the unique name";
