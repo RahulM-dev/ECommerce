@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.anonymous.product.dto.ProductRequestDto;
@@ -16,6 +17,7 @@ import com.anonymous.product.model.Product;
 import com.anonymous.product.repository.CategoryRepository;
 import com.anonymous.product.repository.ProductRepository;
 
+@Service
 public class ProductServiceImpl implements ProductService{
 	
 	@Autowired
@@ -84,6 +86,12 @@ public class ProductServiceImpl implements ProductService{
 		Category category = categoryRepository.findById(productDto.getProductCategoryId())
 									.orElseThrow(() -> new RuntimeException("Category Not found"));
 		product.setCategory(category);
+		return true;
+	}
+	
+	@Override
+	public boolean deleteProductByCategoryId(String categoryId) {
+		categoryRepository.deleteByCategoryId(categoryId);
 		return true;
 	}
 	

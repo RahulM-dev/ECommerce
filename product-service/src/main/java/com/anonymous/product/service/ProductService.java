@@ -15,5 +15,6 @@ public interface ProductService {
 	List<ProductResponseDto> getProductsByCategory(String categoryId);
 	boolean deleteProductById(String productId);
 	boolean updateProduct(String productId, ProductRequestDto productDto);
+	boolean deleteProductByCategoryId(String categoryId);
 
 }
