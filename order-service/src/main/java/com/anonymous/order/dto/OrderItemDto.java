@@ -1,4 +1,4 @@
-package com.anonymous.product.dto;
+package com.anonymous.order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductRequestDto {
+public class OrderItemDto {
 
+	private String orderItemId;
 	private String productName;
-	private String productCategoryId;
 	private double productPrice;
-	private String productBrand;
-	private long productStockQuantity;
+	private int productQuantity;
+	private String productImageURL;
 
 }

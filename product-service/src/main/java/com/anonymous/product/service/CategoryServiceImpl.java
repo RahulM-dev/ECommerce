@@ -1,13 +1,12 @@
 package com.anonymous.product.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.anonymous.product.dto.CategoryRequestDto;
 import com.anonymous.product.dto.CategoryResponseDto;
 import com.anonymous.product.model.Category;
@@ -29,6 +28,7 @@ public class CategoryServiceImpl implements CategoryService{
 	public CategoryResponseDto createCategory(CategoryRequestDto categoryRequestDto) {
 		Category category = convertRequestDtoToCategory(categoryRequestDto);
 		category.setCategoryId(UUID.randomUUID().toString());
+		category.setUpdatedAt(LocalDateTime.now());
 		categoryRepository.save(category);
 		return convertToResponseDto(category);
 	}
@@ -54,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService{
 	@Override
 	public boolean deleteCategory(String categoryId) {
 		categoryRepository.deleteById(categoryId);
-		productService.deleteProductByCategoryId(categoryId);
+		productService.deleteProductsByCategoryId(categoryId);
 		return true;
 	}
 	
